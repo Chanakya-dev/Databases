@@ -24,7 +24,6 @@ db.createCollection("employees", {
 
 ### **Key Differences from MySQL**
 1. **No `AUTO_INCREMENT` in MongoDB**
-   - You need to **manually** handle `id` auto-increment (shown below).
   
 2. **Unique `email` Constraint Must Be Added Separately**
    ```javascript
@@ -35,36 +34,6 @@ db.createCollection("employees", {
    - `VARCHAR(35)` in MySQL → Becomes `bsonType: "string", maxLength: 35`.
 
 ---
-
-### **Manually Handling `AUTO_INCREMENT` for `id`**
-Since MongoDB does **not** have `AUTO_INCREMENT`, you must handle it using a **counter collection**.
-
-1️⃣ **Create a Counter Collection:**
-```javascript
-db.counters.insertOne({ _id: "employee_id", seq: 0 });
-```
-
-2️⃣ **Define an Auto-Increment Function:**
-```javascript
-function getNextSequence(name) {
-    var counter = db.counters.findOneAndUpdate(
-        { _id: name },
-        { $inc: { seq: 1 } },
-        { returnNewDocument: true }
-    );
-    return counter.seq;
-}
-```
-
-3️⃣ **Insert Data Using Auto-Increment ID:**
-```javascript
-db.employees.insertOne({
-    id: getNextSequence("employee_id"),
-    name: "Alice",
-    email: "alice@example.com",
-    age: 28
-});
-```
 
 ---
 
