@@ -1,7 +1,3 @@
-Here are some **SQL queries** that demonstrate **Data Filtering** and **Data Sorting** in MySQL using `AND`, `OR`, and `WHEN`:
-
----
-
 ### **1. Filtering Data Using `WHERE`, `AND`, and `OR`**
 The `WHERE` clause is used to filter records based on specific conditions.
 
