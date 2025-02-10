@@ -22,29 +22,37 @@ db.createCollection("employees", {
 
 ---
 
-### **Key Differences from MySQL**
-1. **No `AUTO_INCREMENT` in MongoDB**
-  
-2. **Unique `email` Constraint Must Be Added Separately**
-   ```javascript
-   db.employees.createIndex({ email: 1 }, { unique: true });
-   ```
-
-3. **MongoDB Uses `string`, Not `VARCHAR`**
-   - `VARCHAR(35)` in MySQL → Becomes `bsonType: "string", maxLength: 35`.
-
----
-
----
-
 ### **Verifying the Collection and Data**
 - **Check Collections:**
   ```javascript
   show collections;
   ```
+
+### **Inserting Data**
+
+```javascript
+db.employees.insertOne({
+    name: "Chanakya",
+    email: "Manas9391133039@gmail.com",
+    age: 23
+});
+```
+
+This will insert a single document into the `employees` collection. 🚀
 - **Retrieve Data:**
   ```javascript
   db.employees.find().pretty();
   ```
+### **Update Data**
+```javascript
+db.employees.updateOne(
+    { email: "Manas9391133039@gmail.com" },  
+    { $set: { age: 32 } }
+);
+```
 
+### **Delete Data**
+```javascript
+db.employees.deleteOne({ email: "aryabhata@example.com" });
+```
 ---
