@@ -1,50 +1,47 @@
-### **Creating a MongoDB Collection Similar to Your MySQL Table**
 
----
+## 1. Create Database
 
-### **Equivalent MongoDB Command**
-```javascript
-db.createCollection("employees", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["name", "email", "age"],  // Equivalent to NOT NULL in MySQL
-            properties: {
-                id: { bsonType: "int", description: "Primary key (manually handled)" },
-                name: { bsonType: "string", maxLength: 35, description: "Name (max 35 chars, NOT NULL)" },
-                email: { bsonType: "string", maxLength: 100, description: "Unique email" },
-                age: { bsonType: "int", description: "Age" }
-            }
-        }
-    }
-});
+```sql
+CREATE DATABASE company_db;
 ```
 
----
+## 2. Use the Database
+```sql
+USE company_db;
+```
 
-### **Key Differences from MySQL**
-1. **No `AUTO_INCREMENT` in MongoDB**
-  
-2. **Unique `email` Constraint Must Be Added Separately**
-   ```javascript
-   db.employees.createIndex({ email: 1 }, { unique: true });
-   ```
+## 3. Create Employee Table
+```sql
+CREATE TABLE employee (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(35) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    age INT
+);
+```
 
-3. **MongoDB Uses `string`, Not `VARCHAR`**
-   - `VARCHAR(35)` in MySQL → Becomes `bsonType: "string", maxLength: 35`.
+## 4. Insert Data into Employee Table
+```sql
+INSERT INTO employee (name, email, age) 
+VALUES ("Chanakya", "Manas9391133039@gmail.com", 23);
+```
 
----
+## 5. Retrieve All Records
+```sql
+SELECT * FROM employee;
+```
 
----
+## 6. Update Employee Age
+```sql
+UPDATE employee 
+SET age = 32 
+WHERE id = 2;
+```
 
-### **Verifying the Collection and Data**
-- **Check Collections:**
-  ```javascript
-  show collections;
-  ```
-- **Retrieve Data:**
-  ```javascript
-  db.employees.find().pretty();
-  ```
+## 7. Delete an Employee Record
+```sql
+DELETE FROM employee 
+WHERE id = 2;
+```
 
 ---
