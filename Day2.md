@@ -11,6 +11,15 @@ The `WHERE` clause is used to filter records based on specific conditions.
 | 5   | Eve    | HR         | 48000   | 25  |
 
 #### **`Table Creation Query`**
+````sql
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    salary INT,
+    age INT
+);
+````
 
 #### **Query 1: Using `AND` for Filtering**
 ```sql
