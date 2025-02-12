@@ -1,121 +1,158 @@
-# **SQL Aggregate Functions**
-Aggregate functions in SQL perform a calculation on multiple values and return a single value. These functions are commonly used with the `GROUP BY` clause to summarize data.
-
-## **1️⃣ COUNT()**
-- Returns the number of rows in a result set.
-- Ignores `NULL` values.
-
-🔹 **Syntax:**  
-```sql
-SELECT COUNT(column_name) FROM table_name WHERE condition;
-```
-🔹 **Example:**  
-```sql
-SELECT COUNT(*) FROM employees WHERE department = 'Sales';
-```
-(Counts the number of employees in the Sales department.)
-
+### **Aggregate Functions in NoSQL (MongoDB) 📌**  
 ---
 
-## **2️⃣ SUM()**
-- Returns the total sum of a numeric column.
+## **1️⃣ $count** (Counts the number of documents)  
+🔹 **Equivalent to SQL's `COUNT()`**  
+🔹 Returns the number of documents that match a query.  
 
-🔹 **Syntax:**  
-```sql
-SELECT SUM(column_name) FROM table_name WHERE condition;
+🔹 **Example:** Count the number of employees in the collection:  
+
+```js
+db.employees.aggregate([
+  { $count: "total_employees" }
+])
 ```
-🔹 **Example:**  
-```sql
-SELECT SUM(salary) FROM employees WHERE department = 'HR';
-```
-(Calculates the total salary of all HR employees.)
 
----
-
-## **3️⃣ AVG()**
-- Returns the average value of a numeric column.
-
-🔹 **Syntax:**  
-```sql
-SELECT AVG(column_name) FROM table_name WHERE condition;
-```
-🔹 **Example:**  
-```sql
-SELECT AVG(salary) FROM employees WHERE department = 'IT';
-```
-(Finds the average salary of IT employees.)
-
----
-
-## **4️⃣ MIN()**
-- Returns the smallest value in a column.
-
-🔹 **Syntax:**  
-```sql
-SELECT MIN(column_name) FROM table_name WHERE condition;
-```
-🔹 **Example:**  
-```sql
-SELECT MIN(salary) FROM employees;
-```
-(Finds the lowest salary in the employees table.)
-
----
-
-## **5️⃣ MAX()**
-- Returns the largest value in a column.
-
-🔹 **Syntax:**  
-```sql
-SELECT MAX(column_name) FROM table_name WHERE condition;
-```
-🔹 **Example:**  
-```sql
-SELECT MAX(salary) FROM employees WHERE department = 'Finance';
-```
-(Finds the highest salary in the Finance department.)
-
----
-
-# **GROUP BY with Aggregate Functions**
-- The `GROUP BY` clause is used to group rows that have the same values into summary rows.
-- It is often used with aggregate functions.
-
-🔹 **Example: Count employees in each department**  
-```sql
-SELECT department, COUNT(*) 
-FROM employees 
-GROUP BY department;
-```
-(Counts the number of employees in each department.)
-
-🔹 **Example: Find the highest salary in each department**  
-```sql
-SELECT department, MAX(salary) 
-FROM employees 
-GROUP BY department;
+✅ Output:  
+```json
+{ "total_employees": 150 }
 ```
 
 ---
 
-# **HAVING vs WHERE**
-- `WHERE` is used to filter rows **before** aggregation.
-- `HAVING` is used to filter groups **after** aggregation.
+## **2️⃣ $sum** (Calculates the sum of values)  
+🔹 **Equivalent to SQL's `SUM()`**  
+🔹 Computes the sum of a numeric field.
 
-🔹 **Example: Find departments with more than 5 employees**  
-```sql
-SELECT department, COUNT(*) 
-FROM employees 
-GROUP BY department
-HAVING COUNT(*) > 5;
+🔹 **Example:** Find the total salary of all employees:  
+```js
+db.employees.aggregate([
+  { $group: { _id: null, totalSalary: { $sum: "$salary" } } }
+])
+```
+✅ Output:  
+```json
+{ "_id": null, "totalSalary": 500000 }
+```
+
+🔹 **Example:** Find the total salary per department:  
+```js
+db.employees.aggregate([
+  { $group: { _id: "$department", totalSalary: { $sum: "$salary" } } }
+])
+```
+✅ Output:  
+```json
+[
+  { "_id": "IT", "totalSalary": 200000 },
+  { "_id": "HR", "totalSalary": 100000 }
+]
 ```
 
 ---
 
-# **Key Points**
-✔ Aggregate functions work on **sets of values**.  
-✔ `COUNT(*)` includes `NULL` values, but `COUNT(column_name)` ignores `NULL`.  
-✔ `GROUP BY` groups data **before** applying aggregate functions.  
-✔ Use `HAVING` instead of `WHERE` when filtering aggregated results.
+## **3️⃣ $avg** (Calculates the average value)  
+🔹 **Equivalent to SQL's `AVG()`**  
+🔹 Computes the average of a numeric field.
+
+🔹 **Example:** Find the average salary per department:  
+```js
+db.employees.aggregate([
+  { $group: { _id: "$department", avgSalary: { $avg: "$salary" } } }
+])
+```
+✅ Output:  
+```json
+[
+  { "_id": "IT", "avgSalary": 75000 },
+  { "_id": "HR", "avgSalary": 50000 }
+]
+```
 
 ---
+
+## **4️⃣ $min** (Finds the minimum value)  
+🔹 **Equivalent to SQL's `MIN()`**  
+🔹 Returns the smallest value in a field.
+
+🔹 **Example:** Find the minimum salary per department:  
+```js
+db.employees.aggregate([
+  { $group: { _id: "$department", minSalary: { $min: "$salary" } } }
+])
+```
+✅ Output:  
+```json
+[
+  { "_id": "IT", "minSalary": 50000 },
+  { "_id": "HR", "minSalary": 40000 }
+]
+```
+
+---
+
+## **5️⃣ $max** (Finds the maximum value)  
+🔹 **Equivalent to SQL's `MAX()`**  
+🔹 Returns the largest value in a field.
+
+🔹 **Example:** Find the maximum salary per department:  
+```js
+db.employees.aggregate([
+  { $group: { _id: "$department", maxSalary: { $max: "$salary" } } }
+])
+```
+✅ Output:  
+```json
+[
+  { "_id": "IT", "maxSalary": 100000 },
+  { "_id": "HR", "maxSalary": 60000 }
+]
+```
+
+---
+
+# **Grouping with Aggregation in NoSQL ($group)**
+The `$group` stage is used to perform aggregation **based on a specific field**.  
+
+🔹 **Example: Count employees in each department:**  
+```js
+db.employees.aggregate([
+  { $group: { _id: "$department", employeeCount: { $sum: 1 } } }
+])
+```
+✅ Output:  
+```json
+[
+  { "_id": "IT", "employeeCount": 5 },
+  { "_id": "HR", "employeeCount": 3 }
+]
+```
+
+---
+
+# **Filtering Aggregated Data ($match vs. $having in SQL)**
+- In SQL, `HAVING` filters aggregated data.  
+- In NoSQL, `$match` is used **before** grouping, and `$match` after `$group` works like `HAVING`.  
+
+🔹 **Example: Find departments with more than 3 employees:**  
+```js
+db.employees.aggregate([
+  { $group: { _id: "$department", employeeCount: { $sum: 1 } } },
+  { $match: { employeeCount: { $gt: 3 } } }
+])
+```
+
+✅ Output:  
+```json
+[
+  { "_id": "IT", "employeeCount": 5 }
+]
+```
+
+---
+
+# **Key Takeaways 🚀**
+✔ MongoDB’s **Aggregation Framework** replaces SQL’s aggregate functions.  
+✔ `$group` is like `GROUP BY`, `$match` works like `WHERE` and `HAVING`.  
+✔ Aggregations can work on **nested fields** and **arrays**.  
+✔ Useful for data analytics and summarizing information efficiently.  
