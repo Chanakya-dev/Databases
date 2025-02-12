@@ -25,7 +25,7 @@ db.employees.aggregate([
 🔹 Computes the sum of a numeric field.
 
 🔹 **Example:** Find the total salary of all employees:  
-```json
+```js
 db.employees.aggregate([
   { $group: { _id: null, totalSalary: { $sum: "$salary" } } }
 ])
@@ -36,7 +36,7 @@ db.employees.aggregate([
 ```
 
 🔹 **Example:** Find the total salary per department:  
-```json
+```js
 db.employees.aggregate([
   { $group: { _id: "$department", totalSalary: { $sum: "$salary" } } }
 ])
@@ -56,7 +56,7 @@ db.employees.aggregate([
 🔹 Computes the average of a numeric field.
 
 🔹 **Example:** Find the average salary per department:  
-```json
+```js
 db.employees.aggregate([
   { $group: { _id: "$department", avgSalary: { $avg: "$salary" } } }
 ])
@@ -76,7 +76,7 @@ db.employees.aggregate([
 🔹 Returns the smallest value in a field.
 
 🔹 **Example:** Find the minimum salary per department:  
-```json
+```js
 db.employees.aggregate([
   { $group: { _id: "$department", minSalary: { $min: "$salary" } } }
 ])
@@ -96,7 +96,7 @@ db.employees.aggregate([
 🔹 Returns the largest value in a field.
 
 🔹 **Example:** Find the maximum salary per department:  
-```json
+```js
 db.employees.aggregate([
   { $group: { _id: "$department", maxSalary: { $max: "$salary" } } }
 ])
@@ -115,7 +115,7 @@ db.employees.aggregate([
 The `$group` stage is used to perform aggregation **based on a specific field**.  
 
 🔹 **Example: Count employees in each department:**  
-```json
+```js
 db.employees.aggregate([
   { $group: { _id: "$department", employeeCount: { $sum: 1 } } }
 ])
@@ -135,7 +135,7 @@ db.employees.aggregate([
 - In NoSQL, `$match` is used **before** grouping, and `$match` after `$group` works like `HAVING`.  
 
 🔹 **Example: Find departments with more than 3 employees:**  
-```json
+```js
 db.employees.aggregate([
   { $group: { _id: "$department", employeeCount: { $sum: 1 } } },
   { $match: { employeeCount: { $gt: 3 } } }
