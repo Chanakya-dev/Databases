@@ -6,11 +6,13 @@
 🔹 Returns the number of documents that match a query.  
 
 🔹 **Example:** Count the number of employees in the collection:  
+
 ```json
 db.employees.aggregate([
   { $count: "total_employees" }
 ])
 ```
+
 ✅ Output:  
 ```json
 { "total_employees": 150 }
