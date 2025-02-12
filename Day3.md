@@ -7,7 +7,7 @@
 
 🔹 **Example:** Count the number of employees in the collection:  
 
-```json
+```js
 db.employees.aggregate([
   { $count: "total_employees" }
 ])
