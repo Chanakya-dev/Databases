@@ -1,4 +1,4 @@
-### `Many to Many`
+### `Student Course`
 ```sql
 create table StCou(
 scid int primary key auto_increment,
