@@ -129,6 +129,19 @@ INNER JOIN Studentdetails sd ON s.sid = sd.fsid;
 #### **Explanation:**
 - One student can have **multiple contact numbers** (One-to-Many).
 
+### **5. Fetching Single Student Data**
+```sql
+SELECT s.sid, s.sname, s.sage, c.cname, c.cfee, sd.Mnum
+FROM student s
+LEFT JOIN StCou sc ON s.sid = sc.fsid
+LEFT JOIN Course c ON sc.fcid = c.cid
+LEFT JOIN Studentdetails sd ON s.sid = sd.fsid
+WHERE s.sid = 1; -- Replace 1 with the student's ID
+```
+
+#### **Explanation:**
+- FFetching Entire Details of One Student
+
 ---
 
 ## **Conclusion**
