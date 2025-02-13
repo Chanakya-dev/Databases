@@ -1,7 +1,3 @@
-Here’s how you can structure the equivalent of SQL table creation and data insertion in **MongoDB** using **collections** and `insertMany()` functions.
-
----
-
 ## **1. Creating Collections and Inserting Data**
 
 ### **1.1 Student Collection**
