@@ -68,18 +68,3 @@ WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = (SELECT cid FROM Course ORDER 
 ```
 
 ---
-## **Summary Table of Subquery Operations**
-| Operation | Example |
-|-----------|------------|
-| `=` | Find students of the same age as a student in course ID 1. |
-| `IN` | Find students with any age matching a student in course ID 1. |
-| `ANY` | Find students younger than at least one student in course ID 1. |
-| `ALL` | Find students younger than the youngest student in course ID 1. |
-| `EXISTS` | Return students if course ID 1 has students. |
-| `NOT EXISTS` | Return students if course ID 1 has no students. |
-| `INSERT` | Insert students enrolled in at least one course. |
-| `UPDATE` | Increase course fee for courses below the average fee. |
-| `DELETE` | Remove students enrolled in the cheapest course. |
-
----
-
