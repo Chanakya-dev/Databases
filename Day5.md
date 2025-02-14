@@ -14,77 +14,86 @@ A subquery is a query nested inside another SQL query. It is used to retrieve da
 
 ### **1. SELECT with Subqueries**
 #### Example 1: Using `=`
-Find employees who have the same salary as at least one employee from department 10.
+Find students who have the same age as at least one student from course ID 1.
 ```sql
-SELECT name, salary
-FROM employees
-WHERE salary = (SELECT salary FROM employees WHERE department_id = 10);
+SELECT sname, sage
+FROM student
+WHERE sage = (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 1));
 ```
 #### Example 2: Using `IN`
-Find employees who earn any salary from department 10.
+Find students who have any age matching a student from course ID 1.
 ```sql
-SELECT name, salary
-FROM employees
-WHERE salary IN (SELECT salary FROM employees WHERE department_id = 10);
+SELECT sname, sage
+FROM student
+WHERE sage IN (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 1));
 ```
 #### Example 3: Using `ANY`
-Find employees who earn **less than the highest** salary in department 10.
+Find students who are **younger than the oldest** student in course ID 1.
 ```sql
-SELECT name, salary
-FROM employees
-WHERE salary < ANY (SELECT salary FROM employees WHERE department_id = 10);
+SELECT sname, sage
+FROM student
+WHERE sage < ANY (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 1));
 ```
 #### Example 4: Using `ALL`
-Find employees who earn **less than the lowest** salary in department 10.
+Find students who are **younger than the youngest** student in course ID 1.
 ```sql
-SELECT name, salary
-FROM employees
-WHERE salary < ALL (SELECT salary FROM employees WHERE department_id = 10);
+SELECT sname, sage
+FROM student
+WHERE sage < ALL (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 1));
 ```
 #### Example 5: Using `EXISTS`
-Find employees **only if department 10 has employees**.
+Find students **only if course ID 1 has students enrolled**.
 ```sql
-SELECT name, salary
-FROM employees
-WHERE EXISTS (SELECT 1 FROM employees WHERE department_id = 10);
+SELECT sname, sage
+FROM student
+WHERE EXISTS (SELECT 1 FROM StCou WHERE fcid = 1);
 ```
 #### Example 6: Using `NOT EXISTS`
-Find employees **only if department 10 has no employees**.
+Find students **only if course ID 1 has no students enrolled**.
 ```sql
-SELECT name, salary
-FROM employees
-WHERE NOT EXISTS (SELECT 1 FROM employees WHERE department_id = 10);
+SELECT sname, sage
+FROM student
+WHERE NOT EXISTS (SELECT 1 FROM StCou WHERE fcid = 1);
+```
+
+---
+### **2. INSERT with Subqueries**
+Insert students who have enrolled in at least one course into a new table.
+```sql
+INSERT INTO enrolled_students (sid, sname, sage)
+SELECT sid, sname, sage FROM student WHERE sid IN (SELECT DISTINCT fsid FROM StCou);
 ```
 
 ---
 ### **3. UPDATE with Subqueries**
-Increase salary by 10% for employees who have a salary less than the department average.
+Increase course fee by 10% for courses where the fee is below the average course fee.
 ```sql
-UPDATE employees
-SET salary = salary * 1.10
-WHERE salary < (SELECT AVG(salary) FROM employees);
+UPDATE Course
+SET cfee = cfee * 1.10
+WHERE cfee < (SELECT AVG(cfee) FROM Course);
 ```
 
 ---
 ### **4. DELETE with Subqueries**
-Delete employees who earn less than the minimum salary in department 10.
+Delete students who are enrolled in the least expensive course.
 ```sql
-DELETE FROM employees
-WHERE salary < (SELECT MIN(salary) FROM employees WHERE department_id = 10);
+DELETE FROM student
+WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = (SELECT cid FROM Course ORDER BY cfee ASC LIMIT 1));
 ```
 
 ---
 ## **Summary Table of Subquery Operations**
 | Operation | Example |
 |-----------|------------|
-| `=` | Find employees earning the same salary as department 10. |
-| `IN` | Find employees with any salary that matches department 10. |
-| `ANY` | Find employees earning less than at least one salary in department 10. |
-| `ALL` | Find employees earning less than the lowest salary in department 10. |
-| `EXISTS` | Return employees if department 10 has employees. |
-| `NOT EXISTS` | Return employees if department 10 is empty. |
-| `INSERT` | Insert employees who earn above the company average. |
-| `UPDATE` | Increase salary for employees earning below the department average. |
-| `DELETE` | Remove employees earning below department 10’s minimum salary. |
+| `=` | Find students of the same age as a student in course ID 1. |
+| `IN` | Find students with any age matching a student in course ID 1. |
+| `ANY` | Find students younger than at least one student in course ID 1. |
+| `ALL` | Find students younger than the youngest student in course ID 1. |
+| `EXISTS` | Return students if course ID 1 has students. |
+| `NOT EXISTS` | Return students if course ID 1 has no students. |
+| `INSERT` | Insert students enrolled in at least one course. |
+| `UPDATE` | Increase course fee for courses below the average fee. |
+| `DELETE` | Remove students enrolled in the cheapest course. |
 
 ---
+
