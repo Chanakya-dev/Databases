@@ -16,9 +16,11 @@ A subquery is a query nested inside another SQL query. It is used to retrieve da
 #### Example 1: Using `=`
 Find students who have the same age as at least one student from course ID 1.
 ```sql
+
 SELECT sname, sage
 FROM student
 WHERE sage = (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 1));
+
 ```
 #### Example 2: Using `IN`
 Find students who have any age matching a student from course ID 1.
@@ -39,21 +41,7 @@ Find students who are **younger than the youngest** student in course ID 1.
 ```sql
 SELECT sname, sage
 FROM student
-WHERE sage < ALL (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 1));
-```
-#### Example 5: Using `EXISTS`
-Find students **only if course ID 1 has students enrolled**.
-```sql
-SELECT sname, sage
-FROM student
-WHERE EXISTS (SELECT 1 FROM StCou WHERE fcid = 1);
-```
-#### Example 6: Using `NOT EXISTS`
-Find students **only if course ID 1 has no students enrolled**.
-```sql
-SELECT sname, sage
-FROM student
-WHERE NOT EXISTS (SELECT 1 FROM StCou WHERE fcid = 1);
+WHERE sage < ALL (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 2));
 ```
 
 ---
