@@ -16,11 +16,9 @@ A subquery is a query nested inside another SQL query. It is used to retrieve da
 #### Example 1: Using `=`
 Find students who have the same age as at least one student from course ID 1.
 ```sql
-
-SELECT sname, sage
-FROM student
-WHERE sage = (SELECT sage FROM student WHERE sid IN (SELECT fsid FROM StCou WHERE fcid = 1));
-
+SELECT sname, sage 
+FROM student 
+WHERE sage = (SELECT MIN(sage) FROM student);
 ```
 #### Example 2: Using `IN`
 Find students who have any age matching a student from course ID 1.
